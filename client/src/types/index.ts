@@ -42,6 +42,7 @@ export interface Pedido {
   fechaSolicitada: string;       // ISO date
   estado: PedidoEstado;
   notas: string | null;
+  origenWeb: boolean;
   createdById: number | null;
   updatedById: number | null;
   createdAt: string;

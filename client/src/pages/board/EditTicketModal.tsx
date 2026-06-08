@@ -239,28 +239,28 @@ export default function EditTicketModal({ ticket, onClose, onSaved, onDeleted, o
                     )}
                     <div className="flex flex-col gap-1.5">
                       {pedidoIds.map((pid) => {
-                        const pedido = assignedMap.get(pid) ?? pedidosPendientes.find((p) => p.id === pid);
+                        const pedido = (assignedMap.get(pid) ?? pedidosPendientes.find((p) => p.id === pid)) as Pedido | undefined;
                         if (!pedido) return null;
                         return (
                           <div key={pid} className="flex items-center gap-2 px-3 py-2 bg-surface-2 border border-border rounded-md">
                             <GripVertical className="w-3.5 h-3.5 text-text-disabled flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-medium text-text-primary truncate">{'nombreCliente' in pedido ? pedido.nombreCliente : pedido.nombreCliente}</span>
-                                {'esGrande' in pedido && pedido.esGrande && (
+                                <span className="text-xs font-medium text-text-primary truncate">{pedido.nombreCliente}</span>
+                                {pedido.esGrande && (
                                   <span className="text-[9px] bg-accent-light text-accent px-1 py-0.5 rounded">GRANDE</span>
                                 )}
-                                {'tipoCliente' in pedido && (
+                                {pedido.tipoCliente && (
                                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${tipoClienteColor(pedido.tipoCliente)}`}>
                                     {TIPO_CLIENTE_LABELS[pedido.tipoCliente]}
                                   </span>
                                 )}
                               </div>
-                              {'fechaSolicitada' in pedido && (
+                              {pedido.fechaSolicitada && (
                                 <p className="text-[10px] text-text-disabled truncate">{formatDate(pedido.fechaSolicitada)}</p>
                               )}
                             </div>
-                            {'estado' in pedido && (
+                            {pedido.estado && (
                               <span className="text-[9px] text-text-disabled flex-shrink-0">{PEDIDO_ESTADO_LABELS[pedido.estado]}</span>
                             )}
                             <button type="button" onClick={() => removePedido(pid)} className="p-1 rounded hover:bg-saturado-light hover:text-saturado text-text-disabled flex-shrink-0">

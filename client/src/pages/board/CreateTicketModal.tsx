@@ -25,8 +25,8 @@ export default function CreateTicketModal({ initialDate, onClose, onCreated, onE
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.get<Repartidor[]>('/auth/users')
-      .then((users) => setRepartidores(users.filter((u) => u.activo && (u as { rol: string }).rol === 'repartidor')))
+    api.get<(Repartidor & { rol: string })[]>('/auth/users')
+      .then((users) => setRepartidores(users.filter((u) => u.activo && u.rol === 'repartidor')))
       .catch(() => setRepartidores([]));
   }, []);
 
