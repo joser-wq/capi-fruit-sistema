@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Usuarios del sistema interno ──────────────────────────────────────────
+model User {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  email     String   @unique
+  password  String
+  rol       String   @default("repartidor") // admin | repartidor | gerencia
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pedidosCreados      Pedido[] @relation("PedidoCreatedBy")
+  pedidosActualizados Pedido[] @relation("PedidoUpdatedBy")
+  ticketsAsignados    Ticket[] @relation("TicketRepartidor")
+}
+
+// ── Pedidos (provienen del carrito de la web o creados manualmente) ───────
+model Pedido {
+  id               Int      @id @default(autoincrement())
+  numeroPedido     String   @unique // CF-2026-0001
+  nombreCliente    String
+  tipoCliente      String   // hotel | restaurante | regular
+  productos        Json     // ProductoPedido[]
+  pesoTotal        Float?   // kg totales (calculado)
+  numProductosTipo Int      @default(0) // tipos distintos de producto
+  esGrande         Boolean  @default(false) // >5 kg O ≥3 tipos distintos
+  direccionEntrega String
+  telefono         String?
+  fechaSolicitada  DateTime
+  estado           String   @default("pendiente") // pendiente | aceptado | enPreparacion | enCamino | entregado
+  notas            String?
+  origenWeb        Boolean  @default(false) // true si vino del carrito web
+  createdById      Int?
+  createdBy        User?    @relation("PedidoCreatedBy", fields: [createdById], references: [id])
+  updatedById      Int?
+  updatedBy        User?    @relation("PedidoUpdatedBy", fields: [updatedById], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  ticketPedidos TicketPedido[]
+}
+
+// ── Tickets de ruta o mantenimiento ──────────────────────────────────────
+model Ticket {
+  id           Int       @id @default(autoincrement())
+  codigo       String    @unique // TK-2026-0001
+  tipo         String    // ruta | mantenimiento
+  fecha        DateTime
+  fechaFin     DateTime?
+  descripcion  String?
+  repartidorId Int?
+  repartidor   User?     @relation("TicketRepartidor", fields: [repartidorId], references: [id])
+  horaSalida   String?
+  notas        String?
+  estado       String    @default("borrador") // borrador | asignado | enRuta | completado
+  orden        Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  ticketPedidos TicketPedido[]
+}
+
+// ── Relación Ticket ↔ Pedido (un ticket tiene N pedidos en orden) ─────────
+model TicketPedido {
+  id       Int     @id @default(autoincrement())
+  ticketId Int
+  pedidoId Int
+  orden    Int     @default(0)
+  active   Boolean @default(true)
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  pedido Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, pedidoId])
+  @@index([ticketId])
+  @@index([pedidoId])
+}

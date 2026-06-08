@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ── Colores de marca Capi Fruit ─────────────────────────────────── */
+  --color-primary: #2D5016;
+  --color-primary-light: #EFF6E8;
+  --color-accent: #F97316;
+  --color-accent-light: #FFF7ED;
+
+  /* ── Superficies ─────────────────────────────────────────────────── */
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F8FAF5;
+
+  /* ── Bordes ──────────────────────────────────────────────────────── */
+  --color-border: #E4ECD9;
+  --color-border-strong: #C8D9B5;
+
+  /* ── Texto ───────────────────────────────────────────────────────── */
+  --color-text-primary: #1A2812;
+  --color-text-secondary: #4B5E36;
+  --color-text-disabled: #8FA070;
+
+  /* ── Estado disponible / saturado ───────────────────────────────── */
+  --color-disponible: #16A34A;
+  --color-saturado: #DC2626;
+  --color-saturado-light: #FEF2F2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-surface-2);
+  color: var(--color-text-primary);
+}
+
+@media print {
+  .no-print { display: none !important; }
+}
