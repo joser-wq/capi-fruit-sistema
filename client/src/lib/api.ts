@@ -1,5 +1,5 @@
 // En producción (Vercel) usa la variable de entorno; en dev usa el proxy de Vite
-const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'https://capi-fruit-sistema-production.up.railway.app/api';
+const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? '/api';
 const TOKEN_KEY = 'auth_token';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
