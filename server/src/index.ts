@@ -11,19 +11,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3001;
 
 // ── CORS ──────────────────────────────────────────────────────────────────
-const allowedOrigins = [
-  process.env.CLIENT_URL ?? 'http://localhost:5173',
-  process.env.WEB_URL ?? '',
-].filter(Boolean);
-
-app.use(cors({
-  origin: (origin, cb) => {
-    // Permitir llamadas sin origin (curl, Postman, servidor a servidor)
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('CORS no permitido'));
-  },
-  credentials: true,
-}));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 

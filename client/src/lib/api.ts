@@ -18,7 +18,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     return undefined as T;
   }
   if (!res.ok) {
-    const body = await res.json().catch(() => ({ error: 'Error desconocido' }));
+    const body = await res.json().catch(() => ({ error: `Error HTTP ${res.status} en ${BASE_URL}` }));
     throw new Error((body as { error?: string }).error ?? `HTTP ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
